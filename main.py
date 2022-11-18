@@ -151,12 +151,14 @@ def main_worker(gpu, ngpus_per_node, args):
         print("=> using pre-trained model '{}'".format(args.arch))
         model = models.__dict__[args.arch](pretrained=True)
         numFit = model.fc.in_features
-        model.fc = nn.Linear(numFit, 200)
+        model.fc = nn.Sequential(nn.Dropout(p=0.5), nn.Linear(numFit, 200))
+        # model.fc = nn.Linear(numFit, 200)
     else:
         print("=> creating model '{}'".format(args.arch))
         model = models.__dict__[args.arch]()
         numFit = model.fc.in_features
-        model.fc = nn.Linear(numFit, 200)
+        model.fc = nn.Sequential(nn.Dropout(p=0.5), nn.Linear(numFit, 200))
+        # model.fc = nn.Linear(numFit, 200)
 
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
